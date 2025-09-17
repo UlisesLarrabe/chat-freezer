@@ -1,15 +1,7 @@
 "use client";
 
-import {
-  Conversation,
-  ConversationContent,
-  ConversationEmptyState,
-  ConversationScrollButton,
-} from "@/components/ai-elements/conversation";
-import { Message, MessageContent } from "@/components/ai-elements/message";
+import { Conversation } from "@/components/ai-elements/conversation";
 import { useChat } from "./hooks/use-chat";
-import { MessageSquare } from "lucide-react";
-import { Response } from "@/components/ai-elements/response";
 import InputChat from "./elements/input-chat";
 import ChatHistory from "./elements/chat-history";
 
