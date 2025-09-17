@@ -7,7 +7,7 @@ import {
   ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
 import { Message, MessageContent } from "@/components/ai-elements/message";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useChat } from "./hooks/use-chat";
 import { MessageSquare } from "lucide-react";
 import {
@@ -15,18 +15,15 @@ import {
   PromptInputSubmit,
   PromptInputTextarea,
 } from "@/components/ai-elements/prompt-input";
+import { Response } from "@/components/ai-elements/response";
 
 export default function Home() {
-  const { chat, isLoading, sendMessage, setChat } = useChat();
+  const { chat, isLoading, sendMessage, isStreaming, streamingMessage } =
+    useChat();
   const [inputValue, setInputValue] = useState("");
   const handleSubmit = async (text: string) => {
     if (!text.trim()) return;
     setInputValue("");
-
-    setChat((prevChat) => [
-      ...(prevChat || []),
-      { id: crypto.randomUUID(), role: "user", content: text },
-    ]);
     await sendMessage(text);
   };
   return (
@@ -47,6 +44,18 @@ export default function Home() {
               <MessageContent>{message.content}</MessageContent>
             </Message>
           ))
+        )}
+        {isStreaming && (
+          <Message from="assistant">
+            <MessageContent>
+              <Response>{streamingMessage}</Response>
+            </MessageContent>
+          </Message>
+        )}
+        {isLoading && !isStreaming && (
+          <Message from="assistant">
+            <MessageContent>Freezer está escribiendo...</MessageContent>
+          </Message>
         )}
       </ConversationContent>
       <ConversationScrollButton />

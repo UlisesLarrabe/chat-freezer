@@ -1,7 +1,7 @@
 import { PROMPTS } from "@/app/lib/prompts";
 import { GenerateChatRequest } from "@/app/lib/types";
 import { google } from "@ai-sdk/google";
-import { generateText, streamText } from "ai";
+import { streamText } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -15,11 +15,11 @@ export async function POST(request: NextRequest) {
         .join("\n");
       prompt = PROMPTS.CONTINUE_MESSAGE(conversationHistory, userMessage);
     }
-    const { text } = await generateText({
+    const text = await streamText({
       model: google("gemini-2.5-flash-lite"),
       prompt,
     });
-    return NextResponse.json({ res: text });
+    return text.toTextStreamResponse();
   } catch (error) {
     return NextResponse.json(
       { error: "Error al generar la respuesta.", errorDetail: error },
